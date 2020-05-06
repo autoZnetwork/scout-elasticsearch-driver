@@ -16,6 +16,8 @@ use stdClass;
 
 class ElasticEngine extends Engine
 {
+    use AutozTrait;
+
     /**
      * The indexer interface.
      *
@@ -307,30 +309,33 @@ class ElasticEngine extends Engine
         }
 
         $ids = $this->mapIds($results)->all();
-
         $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
 
-        $models = $query
-            ->whereIn($scoutKeyName, $ids)
-            ->get($columns)
-            ->keyBy($scoutKeyName);
+//        $models = $query
+//            ->whereIn($scoutKeyName, $ids)
+//            ->get($columns)
+//            ->keyBy($scoutKeyName);
 
-        $values = Collection::make($results['hits']['hits'])
-            ->map(function ($hit) use ($models) {
-                $id = $hit['_id'];
+//        $values = Collection::make($results['hits']['hits'])
+//            ->map(function ($hit) use ($models) {
+//                $id = $hit['_id'];
+//
+//                if (isset($models[$id])) {
+//                    $model = $models[$id];
+//
+//                    if (isset($hit['highlight'])) {
+//                        $model->highlight = new Highlight($hit['highlight']);
+//                    }
+//
+//                    return $model;
+//                }
+//            })
+//            ->filter()
+//            ->values();
 
-                if (isset($models[$id])) {
-                    $model = $models[$id];
+        $values = $this::hydrateElasticResult($results);
 
-                    if (isset($hit['highlight'])) {
-                        $model->highlight = new Highlight($hit['highlight']);
-                    }
-
-                    return $model;
-                }
-            })
-            ->filter()
-            ->values();
+        dd($values);
 
         return $values instanceof Collection ? $values : Collection::make($values);
     }
