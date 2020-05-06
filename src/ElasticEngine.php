@@ -315,6 +315,8 @@ class ElasticEngine extends Engine
             ->get($columns)
             ->keyBy($scoutKeyName);
 
+        dd($models);
+
         $values = Collection::make($results['hits']['hits'])
             ->map(function ($hit) use ($models) {
                 $id = $hit['_id'];
