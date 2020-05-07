@@ -295,17 +295,7 @@ class ElasticEngine extends Engine
         if ($this->getTotalCount($results) === 0) {
             return Collection::make();
         }
-
-        //$scoutKeyName = $model->getScoutKeyName();
-
-//        $columns = Arr::get($results, '_payload.body._source');
-//
-//        if (is_null($columns)) {
-//            $columns = ['*'];
-//        } else {
-//            $columns[] = $scoutKeyName;
-//        }
-
+        
         $values = $model::hydrateElasticResult($results['hits']['hits']);
 
         return $values instanceof Collection ? $values : Collection::make($values);
