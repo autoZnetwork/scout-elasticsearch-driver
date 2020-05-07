@@ -13,10 +13,6 @@ class AutozResultCollection extends \Illuminate\Database\Eloquent\Collection
     /**
      * Create a new instance containing Elasticsearch results
      *
-     * @todo Remove backwards compatible detection at further point
-     * @deprecated Initialize with params ($results, $instance) is deprecated,
-     *    please use Model::hydrateElasticsearchResult($results).
-     *
      * @param  mixed  $items
      * @param  array  $meta
      * @return void
@@ -25,8 +21,7 @@ class AutozResultCollection extends \Illuminate\Database\Eloquent\Collection
     {
         parent::__construct($items);
 
-        // Take our result meta and map it
-        // to some class properties.
+        // Take our result meta and map it to some class properties.
         if (count($meta) > 0) {
             $this->setMeta($meta);
         }

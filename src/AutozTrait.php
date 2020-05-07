@@ -2,6 +2,8 @@
 
 namespace ScoutElastic;
 
+use ReflectionMethod;
+
 trait AutozTrait
 {
     /**
@@ -71,7 +73,7 @@ trait AutozTrait
      * @param  \Illuminate\Database\Eloquent\Relations\Relation  $parentRelation
      * @return static
      */
-    public static function newFromBuilderRecursive(Model $model, array $attributes = [], Relation $parentRelation = null)
+    public static function newFromBuilderRecursive($model, array $attributes = [], $parentRelation = null)
     {
         $instance = $model->newInstance([], $exists = true);
 
@@ -90,7 +92,7 @@ trait AutozTrait
      *
      * @param  \Illuminate\Database\Eloquent\Model $model
      */
-    public static function loadRelationsAttributesRecursive(Model $model)
+    public static function loadRelationsAttributesRecursive($model)
     {
         $attributes = $model->getAttributes();
 
@@ -125,7 +127,7 @@ trait AutozTrait
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  \Illuminate\Database\Eloquent\Relations\Relation  $parentRelation
      */
-    public static function loadPivotAttribute(Model $model, Relation $parentRelation = null)
+    public static function loadPivotAttribute($model, $parentRelation = null)
     {
         $attributes = $model->getAttributes();
 
@@ -146,7 +148,7 @@ trait AutozTrait
      * @param  array $items
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function hydrateRecursive(Model $model, array $items, Relation $parentRelation = null)
+    public static function hydrateRecursive($model, array $items, $parentRelation = null)
     {
         $instance = $model;
 
@@ -177,5 +179,39 @@ trait AutozTrait
         }
 
         return true;
+    }
+
+    /**
+     * @param string $classNeedle
+     * @param string $classHaystack
+     * @return bool
+     *
+     * @param $classNeedle
+     * @param $classHaystack
+     * @return bool
+     * @throws \ReflectionException
+     */
+    private static function isClassInClass($classNeedle, $classHaystack)
+    {
+        // check for the same
+        if ($classNeedle == $classHaystack) {
+            return true;
+        }
+
+        // Check for parent
+        $classHaystackReflected = new \ReflectionClass($classHaystack);
+
+        while ($parent = $classHaystackReflected->getParentClass()) {
+            /**
+             * @var \ReflectionClass $parent
+             */
+            if ($parent->getName() == $classNeedle) {
+                return true;
+            }
+
+            $classHaystackReflected = $parent;
+        }
+
+        return false;
     }
 }
