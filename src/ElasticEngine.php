@@ -16,8 +16,6 @@ use stdClass;
 
 class ElasticEngine extends Engine
 {
-    use AutozTrait;
-
     /**
      * The indexer interface.
      *
@@ -333,7 +331,7 @@ class ElasticEngine extends Engine
 //            ->filter()
 //            ->values();
 
-        $values = $this::hydrateElasticResult($results);
+        $values = $model::hydrateElasticResult($results);
 
         dd($values);
 

@@ -14,6 +14,8 @@ trait Searchable
         SourceSearchable::getScoutKeyName as sourceGetScoutKeyName;
     }
 
+    use AutozTrait;
+
     /**
      * The highligths.
      *
