@@ -10,11 +10,9 @@ use ScoutElastic\Builders\SearchBuilder;
 
 trait Searchable
 {
-    use SourceSearchable {
+    use AutozTrait, SourceSearchable {
         SourceSearchable::getScoutKeyName as sourceGetScoutKeyName;
     }
-
-    use AutozTrait;
 
     /**
      * The highligths.

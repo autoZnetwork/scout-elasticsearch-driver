@@ -105,16 +105,23 @@ trait AutozTrait
                     $relation = $model->$key();
 
                     if ($relation instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
-                        // Check if the relation field is single model or collections
-                        if (is_null($value) === true || !static::isMultiLevelArray($value)) {
+                        $originalValue = $value;
+
+                        // check if the relation field is single model or collections
+                        if (is_null($value) || !static::isMultiLevelArray($value)) {
                             $value = [$value];
                         }
 
-                        $models = static::hydrateRecursive($relation->getModel(), $value, $relation);
+                        if (!is_null($originalValue)) {
+                            $models = static::hydrateRecursive($relation->getModel(), $value, $relation);
 
-                        // Unset attribute before match relation
-                        unset($model[$key]);
-                        $relation->match([$model], $models, $key);
+                            // unset attribute before match relation
+                            unset($model[$key]);
+                            $relation->match([$model], $models, $key);
+                        } else {
+                            // unset attribute
+                            unset($model[$key]);
+                        }
                     }
                 }
             }
