@@ -296,44 +296,17 @@ class ElasticEngine extends Engine
             return Collection::make();
         }
 
-        $scoutKeyName = $model->getScoutKeyName();
+        //$scoutKeyName = $model->getScoutKeyName();
 
-        $columns = Arr::get($results, '_payload.body._source');
-
-        if (is_null($columns)) {
-            $columns = ['*'];
-        } else {
-            $columns[] = $scoutKeyName;
-        }
-
-        $ids = $this->mapIds($results)->all();
-        $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
-
-//        $models = $query
-//            ->whereIn($scoutKeyName, $ids)
-//            ->get($columns)
-//            ->keyBy($scoutKeyName);
-
-//        $values = Collection::make($results['hits']['hits'])
-//            ->map(function ($hit) use ($models) {
-//                $id = $hit['_id'];
+//        $columns = Arr::get($results, '_payload.body._source');
 //
-//                if (isset($models[$id])) {
-//                    $model = $models[$id];
-//
-//                    if (isset($hit['highlight'])) {
-//                        $model->highlight = new Highlight($hit['highlight']);
-//                    }
-//
-//                    return $model;
-//                }
-//            })
-//            ->filter()
-//            ->values();
+//        if (is_null($columns)) {
+//            $columns = ['*'];
+//        } else {
+//            $columns[] = $scoutKeyName;
+//        }
 
-        $values = $model::hydrateElasticResult($results);
-
-        dd($values);
+        $values = $model::hydrateElasticResult($results['hits']['hits']);
 
         return $values instanceof Collection ? $values : Collection::make($values);
     }

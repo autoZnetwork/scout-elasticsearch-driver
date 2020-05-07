@@ -100,11 +100,11 @@ trait AutozTrait
             if (method_exists($model, $key)) {
                 $reflection_method = new ReflectionMethod($model, $key);
 
-                // Check if method class has or inherits Illuminate\Database\Eloquent\Model
-                if(!static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
+                // check if method class has or inherits Illuminate\Database\Eloquent\Model
+                if (static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
                     $relation = $model->$key();
 
-                    if ($relation instanceof Relation) {
+                    if ($relation instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
                         // Check if the relation field is single model or collections
                         if (is_null($value) === true || !static::isMultiLevelArray($value)) {
                             $value = [$value];
