@@ -295,7 +295,7 @@ class ElasticEngine extends Engine
         if ($this->getTotalCount($results) === 0) {
             return Collection::make();
         }
-        
+
         $values = $model::hydrateElasticResult($results['hits']['hits']);
 
         return $values instanceof Collection ? $values : Collection::make($values);
